@@ -1,2 +1,2 @@
-from .maon import PluginExample
+from .main import PluginExample
 plugin_class = PluginExample
