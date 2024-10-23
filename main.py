@@ -6,7 +6,6 @@ import colorsys
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from colorthief import ColorThief
 
 from panoptic.core.plugin.plugin import APlugin
 from panoptic.models import ActionContext, PropertyType, PropertyMode, DbCommit, Instance, ImageProperty, Property
