@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 
 from panoptic.core.plugin.plugin import APlugin
 from panoptic.models import ActionContext, PropertyType, PropertyMode, DbCommit, Instance, ImageProperty, Property
-from panoptic.models.result import ActionResult
+from panoptic.models.results import ActionResult
 from panoptic.core.plugin.plugin_project_interface import PluginProjectInterface
 
 class PluginParams(BaseModel):
