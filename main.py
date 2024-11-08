@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 
 from panoptic.core.plugin.plugin import APlugin
 from panoptic.models import ActionContext, PropertyType, PropertyMode, DbCommit, Instance, ImageProperty, Property
+from panoptic.models.results import ActionResult
 from panoptic.core.plugin.plugin_project_interface import PluginProjectInterface
 
 
@@ -27,8 +28,9 @@ class ColorsPlugin(APlugin):
             # values = get_dominant(i.url)
             values = step(rgb_array, 8)
             res[i.sha1] = values
-        await self.save_values(res)
-
+        res = await self.save_values(res)
+        return ActionResult(commit=res)
+        
     async def save_values(self, colors):
         commit = DbCommit()
         # first create the props in DB
@@ -42,6 +44,7 @@ class ColorsPlugin(APlugin):
                 commit.image_values.append(ImageProperty(property_id=prop.id, sha1=sha1, value=colors[sha1][index]))
             
         res = await self.project.do(commit)
+        return res
 
 
 def get_main_color(image_path, n_colors=1):
