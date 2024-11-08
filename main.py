@@ -6,26 +6,15 @@ import colorsys
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-from colorthief import ColorThief
 
 from panoptic.core.plugin.plugin import APlugin
 from panoptic.models import ActionContext, PropertyType, PropertyMode, DbCommit, Instance, ImageProperty, Property
 from panoptic.core.plugin.plugin_project_interface import PluginProjectInterface
 
-class PluginParams(BaseModel):
-    """
-    @default_text_prop: the default text prop that will be used for text+image similarity
-    @ocr_prop_name: the name of the prop that will be created after an ocr
-    """
-    default_text_prop: str = "tweet_text"
 
-    ocr_prop_name: str = "ocr"
-  
-  
-class PluginExample(APlugin):  
-    def __init__(self, project: PluginProjectInterface, plugin_path: str):  
-        super().__init__(name='PluginExample',project=project, plugin_path=plugin_path)  
-        self.params = PluginParams()  
+class ColorsPlugin(APlugin):  
+    def __init__(self, project: PluginProjectInterface, plugin_path: str, name: str):  
+        super().__init__(name=name, project=project, plugin_path=plugin_path)
         self.add_action_easy(self.compute_colors, ['execute'])
 
     async def compute_colors(self, context: ActionContext):
@@ -55,13 +44,6 @@ class PluginExample(APlugin):
         res = await self.project.do(commit)
 
 
-# way too slow
-# def get_dominant(image_path):
-#     ct = ColorThief(image_path)
-#     dominant = ct.get_color()
-#     return rgb_to_hsl(dominant)
-
-
 def get_main_color(image_path, n_colors=1):
     # Lire l'image avec OpenCV
     image = cv2.imread(image_path)
@@ -81,18 +63,6 @@ def get_main_color(image_path, n_colors=1):
     # Récupérer la couleur centrale (la plus représentée)
     main_color = kmeans.cluster_centers_[0].astype(int)
     return main_color
-
-# too slow
-# def get_main_color(image_path):
-#     img = cv2.imread(image_path)
-#     n_colors = 3
-#     pixels = np.float32(img.reshape(-1, 3))
-#     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
-#     flags = cv2.KMEANS_RANDOM_CENTERS
-#     _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-#     _, counts = np.unique(labels, return_counts=True)
-#     dominant = palette[np.argmax(counts)]
-#     return rgb_to_hsl(dominant[::-1])
 
 
 def rgb_to_hsl(rgb_arr):

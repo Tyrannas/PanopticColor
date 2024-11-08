@@ -1,2 +1,2 @@
-from .main import PluginExample
-plugin_class = PluginExample
+from .main import ColorsPlugin
+plugin_class = ColorsPlugin
